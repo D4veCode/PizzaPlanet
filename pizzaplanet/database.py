@@ -19,14 +19,15 @@ def createTables(conn):
     sql1 = """CREATE TABLE IF NOT EXISTS Cliente (
                     id_Cliente INTEGER PRIMARY KEY ,
                     name TEXT NOT NULL,
-                    last_Name TEXT NOT NULL);"""
+                    last_Name TEXT NOT NULL,
+                    cedula TEXT);"""
     sqls.append(sql1)
 
     sql2 = """CREATE TABLE IF NOT EXISTS Ingrediente (
                     id_Ingrediente INTEGER PRIMARY KEY,
                     name TEXT NOT NULL,
                     price INTEGER NOT NULL,
-                    tamano INTEGER NOT NULL);"""
+                    tamano TEXT NOT NULL);"""
     sqls.append(sql2)
 
     sql3 = """CREATE TABLE IF NOT EXISTS Pedido(
@@ -63,11 +64,51 @@ def createTables(conn):
     cursor.close()
 
 
+class ClienteController:
+
+    def __init__(self, connection):
+        self.__cursor = connection.cursor()
+
+    def __del__(self):
+        self.__cursor.close()
+
+    def createCliente(self, name, lastName):
+        sql = """INSERT INTO Cliente (name, last_Name)
+             VALUES(?, ?);"""
+        self.__cursor.execute(sql, (name, lastName))
+        return self.__cursor.lastrowid
+
+
+class IngredienteController:
+
+    def __init__(self, connection):
+        self.__cursor = connection.cursor()
+
+    def __del__(self):
+        self.__cursor.close()
+
+    def createIngrediente(self, name, price, tamano):
+        sql = """INSERT INTO Ingrediente (name, price, tamano)
+             VALUES(?, ?, ?);"""
+        self.__cursor.execute(sql, (name, price, tamano))
+        return self.__cursor.lastrowid
+
+    def getIngredientePriceByTamano(self, name, tamano):
+        sql = """SELECT i.price FROM Ingrediente as i
+             WHERE i.name = ? AND i.tamano = ?;"""
+        self.__cursor.execute(sql, (name, tamano))
+        ingrediente = self.__cursor.fetchone()
+        return ingrediente[0]
+
+
 def main():
-    database = "database.db"
+    database = "pizzaplanet.db"
     conn = createConnection(database)
     with conn:
-        createTables(conn)
+        IngredienteC = IngredienteController(conn)
+        price = IngredienteC.getIngredientePriceByTamano('Cebolla','grande')
+        print(price)
+        del IngredienteC
 
 if __name__ == "__main__":
     main()
