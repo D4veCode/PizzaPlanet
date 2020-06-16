@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
+
 def createConnection(database):
     conn = None
     try:
@@ -10,6 +11,7 @@ def createConnection(database):
         print(e)
 
     return conn
+
 
 def createTables(conn):
     sqls = list()
@@ -32,7 +34,8 @@ def createTables(conn):
                     fk_Cliente INTEGER NOT NULL,
                     pedido_Date TEXT NOT NULL,
                     total_Price INTEGER NOT NULL,
-                    FOREIGN KEY (fk_Cliente) REFERENCES Cliente(id_Cliente));"""
+                    FOREIGN KEY (fk_Cliente)
+                        REFERENCES Cliente(id_Cliente));"""
     sqls.append(sql3)
 
     sql4 = """CREATE TABLE IF NOT EXISTS Base(
@@ -40,21 +43,25 @@ def createTables(conn):
                     fk_Pedido INTEGER NOT NULL,
                     tamano TEXT NOT NULL,
                     price INTEGER NOT NULL,
-                    FOREIGN KEY (fk_Pedido) REFERENCES Pedido(id_Pedido));"""
+                    FOREIGN KEY (fk_Pedido)
+                        REFERENCES Pedido(id_Pedido));"""
     sqls.append(sql4)
 
     sql5 = """CREATE TABLE IF NOT EXISTS Pizza (
                     id_Pizza INTEGER PRIMARY KEY,
                     fk_Ingrediente INTEGER NOT NULL,
                     fk_Base INTEGER NOT NULL,
-                    FOREIGN KEY (fk_Ingrediente) REFERENCES Ingrediente(id_Ingrediente),
-                    FOREIGN KEY (fk_Base) REFERENCES Base(id_Base));"""
+                    FOREIGN KEY (fk_Ingrediente)
+                        REFERENCES Ingrediente(id_Ingrediente),
+                    FOREIGN KEY (fk_Base)
+                        REFERENCES Base(id_Base));"""
     sqls.append(sql5)
 
-    cursor = conn.cursor()            
+    cursor = conn.cursor()
     for sql in sqls:
         cursor.execute(sql)
     cursor.close()
+
 
 def main():
     database = "database.db"
