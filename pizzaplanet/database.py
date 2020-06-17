@@ -1,4 +1,5 @@
 import sqlite3
+import string
 from sqlite3 import Error
 
 
@@ -75,7 +76,9 @@ class ClienteController:
     def createCliente(self, name, lastName):
         sql = """INSERT INTO Cliente (name, last_Name)
              VALUES(?, ?);"""
-        self.__cursor.execute(sql, (name, lastName))
+        lowName = name.lower()
+        lowLastName = lastName.lower()
+        self.__cursor.execute(sql, (lowName, lowLastName))
         return self.__cursor.lastrowid
 
 
@@ -90,25 +93,98 @@ class IngredienteController:
     def createIngrediente(self, name, price, tamano):
         sql = """INSERT INTO Ingrediente (name, price, tamano)
              VALUES(?, ?, ?);"""
-        self.__cursor.execute(sql, (name, price, tamano))
+        lowName = name.lower()
+        lowTamano = tamano.lower()
+        self.__cursor.execute(sql, ( lowName, price, lowTamano))
         return self.__cursor.lastrowid
 
-    def getIngredientePriceByTamano(self, name, tamano):
-        sql = """SELECT i.price FROM Ingrediente as i
-             WHERE i.name = ? AND i.tamano = ?;"""
-        self.__cursor.execute(sql, (name, tamano))
-        ingrediente = self.__cursor.fetchone()
-        return ingrediente[0]
 
+class PedidoController:
+    
+    def __init__(self, connection):
+        self.__cursor = connection.cursor()
+
+    def __del__(self):
+        self.__cursor.close()
+
+    def createPedido(self, fk_Cliente, pedido_Date):
+        sql = """INSERT INTO Pedido (fk_Cliente, pedido_Date, total_price)
+             VALUES(?, ?, ?);"""
+        self.__cursor.execute(sql, (fk_Cliente, pedido_Date, 0))
+        return self.__cursor.lastrowid
+
+
+class PizzaController:
+    
+    def __init__(self, connection):
+        self.__cursor = connection.cursor()
+
+    def __del__(self):
+        self.__cursor.close()
+
+    def createPizza(self, fk_Pedido, tamano):
+        lowTamano = tamano.lower()
+        sql = """INSERT INTO Base (fk_Pedido, tamano, price)
+             VALUES(?, ?, ?);"""
+        self.__cursor.execute(sql, (fk_Pedido, lowTamano, 0))
+        return self.__cursor.lastrowid
+
+    def getPedidoIdFromBase(self, id_Base):
+        sql = """SELECT b.fk_Pedido FROM Base as b
+             WHERE b.id_Base = ?;"""
+        self.__cursor.execute(sql, (id_Base,))
+        return self.__cursor.fetchall()
+
+    def getBasePrice(self, id_Base):
+        sql = """SELECT b.price FROM Base as b
+             WHERE b.id_Base = ?;"""
+        self.__cursor.execute(sql, (id_Base,))
+        return self.__cursor.fetchall()
+
+    def updatePizzaPrice(self, id_Base, precio):
+        sql = """UPDATE Base SET price = ?
+             WHERE id_Base = ?;"""
+        self.__cursor.execute(sql, (precio, id_Base))
+        return True
+
+    def updatePedidoPrice(self, id_Pedido, precio):
+        sql = """UPDATE Pedido SET total_price = ?
+             WHERE id_Pedido = ?;"""
+        self.__cursor.execute(sql, (precio, id_Pedido))
+        return True
+
+    def getIngredienteByTamano(self, name, tamano):
+        lowName = name.lower()
+        lowTamano = tamano.lower()
+        sql = """SELECT i.price, i.id_Ingrediente FROM Ingrediente as i
+             WHERE i.name = ? AND i.tamano = ?;"""
+        self.__cursor.execute(sql, (lowName, lowTamano))
+        return self.__cursor.fetchall()
+
+    def addPizzaIngrediente(self, fk_Base, name, tamano):
+        ingrediente = self.getIngredienteByTamano(name,tamano)
+        ingredientePrice = ingrediente[0][0]
+        idIngrediente = ingrediente[0][1]
+        sql = """INSERT INTO Pizza (fk_Ingrediente, fk_Base)
+             VALUES(?, ?);"""
+        self.__cursor.execute(sql, (idIngrediente, fk_Base))
+        self.updatePizzaPrice(fk_Base,ingredientePrice)
+        basePrice = self.getBasePrice(fk_Base)
+        id_Pedido = self.getPedidoIdFromBase(fk_Base)
+        print(basePrice)
+        print(id_Pedido)
+        self.updatePedidoPrice(id_Pedido[0],basePrice[0])
+        return True
+        
 
 def main():
     database = "pizzaplanet.db"
     conn = createConnection(database)
     with conn:
-        IngredienteC = IngredienteController(conn)
-        price = IngredienteC.getIngredientePriceByTamano('Cebolla','grande')
-        print(price)
-        del IngredienteC
+        pedidoc = PizzaController(conn)
+        idPedido = pedidoc.addPizzaIngrediente(1,'cebolla', 'personal')
+        print(idPedido)
+        del pedidoc
 
 if __name__ == "__main__":
     main()
