@@ -116,8 +116,10 @@ class PedidoController:
 
 class PizzaController:
     
-    def __init__(self, connection):
+    def __init__(self, connection, basePrice = 0, pedidoPrice = 0):
         self.__cursor = connection.cursor()
+        self.basePrice = basePrice
+        self.pedidoPrice = pedidoPrice
 
     def __del__(self):
         self.__cursor.close()
@@ -135,22 +137,18 @@ class PizzaController:
         self.__cursor.execute(sql, (id_Base,))
         return self.__cursor.fetchall()
 
-    def getBasePrice(self, id_Base):
-        sql = """SELECT b.price FROM Base as b
-             WHERE b.id_Base = ?;"""
-        self.__cursor.execute(sql, (id_Base,))
-        return self.__cursor.fetchall()
-
-    def updatePizzaPrice(self, id_Base, precio):
-        sql = """UPDATE Base SET price = ?
-             WHERE id_Base = ?;"""
-        self.__cursor.execute(sql, (precio, id_Base))
-        return True
 
     def updatePedidoPrice(self, id_Pedido, precio):
         sql = """UPDATE Pedido SET total_price = ?
              WHERE id_Pedido = ?;"""
         self.__cursor.execute(sql, (precio, id_Pedido))
+        return True
+
+
+    def updateBasePrice(self, id_Base, precio):
+        sql = """UPDATE Base SET price = ?
+             WHERE id_Base = ?;"""
+        self.__cursor.execute(sql, (precio, id_Base))
         return True
 
     def getIngredienteByTamano(self, name, tamano):
@@ -168,12 +166,11 @@ class PizzaController:
         sql = """INSERT INTO Pizza (fk_Ingrediente, fk_Base)
              VALUES(?, ?);"""
         self.__cursor.execute(sql, (idIngrediente, fk_Base))
-        self.updatePizzaPrice(fk_Base,ingredientePrice)
-        basePrice = self.getBasePrice(fk_Base)
         id_Pedido = self.getPedidoIdFromBase(fk_Base)
-        print(basePrice)
-        print(id_Pedido)
-        self.updatePedidoPrice(id_Pedido[0],basePrice[0])
+        self.basePrice += ingredientePrice
+        self.pedidoPrice += self.basePrice
+        self.updateBasePrice(fk_Base, self.basePrice)
+        self.updatePedidoPrice(id_Pedido[0][0], self.pedidoPrice)
         return True
         
 
@@ -183,6 +180,8 @@ def main():
     with conn:
         pedidoc = PizzaController(conn)
         idPedido = pedidoc.addPizzaIngrediente(1,'cebolla', 'personal')
+        idPedido = pedidoc.addPizzaIngrediente(1,'tocineta', 'personal')
+        idPedido = pedidoc.addPizzaIngrediente(1,'tomate', 'personal')
         print(idPedido)
         del pedidoc
 
