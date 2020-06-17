@@ -95,12 +95,12 @@ class IngredienteController:
              VALUES(?, ?, ?);"""
         lowName = name.lower()
         lowTamano = tamano.lower()
-        self.__cursor.execute(sql, ( lowName, price, lowTamano))
+        self.__cursor.execute(sql, (lowName, price, lowTamano))
         return self.__cursor.lastrowid
 
 
 class PedidoController:
-    
+
     def __init__(self, connection):
         self.__cursor = connection.cursor()
 
@@ -115,8 +115,8 @@ class PedidoController:
 
 
 class PizzaController:
-    
-    def __init__(self, connection, basePrice = 0, pedidoPrice = 0):
+
+    def __init__(self, connection, basePrice=0, pedidoPrice=0):
         self.__cursor = connection.cursor()
         self.basePrice = basePrice
         self.pedidoPrice = pedidoPrice
@@ -137,13 +137,11 @@ class PizzaController:
         self.__cursor.execute(sql, (id_Base,))
         return self.__cursor.fetchall()
 
-
     def updatePedidoPrice(self, id_Pedido, precio):
         sql = """UPDATE Pedido SET total_price = ?
              WHERE id_Pedido = ?;"""
         self.__cursor.execute(sql, (precio, id_Pedido))
         return True
-
 
     def updateBasePrice(self, id_Base, precio):
         sql = """UPDATE Base SET price = ?
@@ -160,7 +158,7 @@ class PizzaController:
         return self.__cursor.fetchall()
 
     def addPizzaIngrediente(self, fk_Base, name, tamano):
-        ingrediente = self.getIngredienteByTamano(name,tamano)
+        ingrediente = self.getIngredienteByTamano(name, tamano)
         ingredientePrice = ingrediente[0][0]
         idIngrediente = ingrediente[0][1]
         sql = """INSERT INTO Pizza (fk_Ingrediente, fk_Base)
@@ -172,16 +170,16 @@ class PizzaController:
         self.updateBasePrice(fk_Base, self.basePrice)
         self.updatePedidoPrice(id_Pedido[0][0], self.pedidoPrice)
         return True
-        
+
 
 def main():
     database = "pizzaplanet.db"
     conn = createConnection(database)
     with conn:
         pedidoc = PizzaController(conn)
-        idPedido = pedidoc.addPizzaIngrediente(1,'cebolla', 'personal')
-        idPedido = pedidoc.addPizzaIngrediente(1,'tocineta', 'personal')
-        idPedido = pedidoc.addPizzaIngrediente(1,'tomate', 'personal')
+        idPedido = pedidoc.addPizzaIngrediente(1, 'cebolla', 'personal')
+        idPedido = pedidoc.addPizzaIngrediente(1, 'tocineta', 'personal')
+        idPedido = pedidoc.addPizzaIngrediente(1, 'tomate', 'personal')
         print(idPedido)
         del pedidoc
 
