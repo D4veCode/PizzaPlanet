@@ -1,5 +1,5 @@
-from pizzaplanet import estadisticas 
+from pizzaplanet import main 
 
 if __name__ == "__main__":
-    h = estadisticas.Estadisticas()
-    h.print_hello()
+    m = main.Main()
+    m.menu()
