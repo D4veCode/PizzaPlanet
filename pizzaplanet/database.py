@@ -99,11 +99,21 @@ class IngredienteController:
         return self.__cursor.lastrowid
 
     def getVentaIngredientes(self):
-        sql = """SELECT name, COUNT(name), SUM(price) FROM Ingrediente GROUP BY name;"""
+        sql = """SELECT i.name, COUNT(i.name), SUM(i.price) 
+        FROM Ingrediente as i, Pizza as p WHERE p.fk_Ingrediente = i.id_Ingrediente GROUP BY i.name;"""
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
         return rows
 
+    def getVentaIngredientesByDay(self, date):
+        sql = """SELECT i.name, COUNT(i.name), SUM(i.price) 
+        FROM Ingrediente as i, Pizza as p, Base as b, Pedido as a
+        WHERE p.fk_Ingrediente = i.id_Ingrediente and p.fk_Base = b.id_Base and b.fk_Pedido = a.id_Pedido 
+        and a.pedido_Date = ?
+        GROUP BY i.name;"""
+        self.__cursor.execute(sql, (date,))
+        rows = self.__cursor.fetchall()
+        return rows
 
 class PedidoController:
 
@@ -124,6 +134,18 @@ class PedidoController:
         self.__cursor.execute(sql)
         row = self.__cursor.fetchall()
         return row
+
+    def getVentaTotalByDay(self, date):
+        sql = """SELECT SUM(total_price) FROM Pedido WHERE pedido_Date = ?;"""
+        self.__cursor.execute(sql, (date,))
+        row = self.__cursor.fetchall()
+        return row
+
+    def getDays(self):
+        sql = """SELECT DISTINCT pedido_Date FROM Pedido ORDER BY pedido_Date ASC;"""
+        self.__cursor.execute(sql)
+        rows = self.__cursor.fetchall()
+        return rows
 
 
 class PizzaController:
@@ -186,6 +208,12 @@ class PizzaController:
     def getVentaPizzasTamaño(self):
         sql = """SELECT tamano, COUNT(tamano) FROM Base GROUP BY tamano;"""
         self.__cursor.execute(sql)
+        rows = self.__cursor.fetchall()
+        return rows
+
+    def getVentaPizzasTamañoByDay(self, date):
+        sql = """SELECT b.tamano, COUNT(b.tamano) FROM Base as b, Pedido as p WHERE b.fk_Pedido = p.id_Pedido and p.pedido_Date = ? GROUP BY tamano;"""
+        self.__cursor.execute(sql, (date,))
         rows = self.__cursor.fetchall()
         return rows
 
