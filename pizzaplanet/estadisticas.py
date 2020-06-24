@@ -11,7 +11,8 @@ class Estadisticas:
             print("1)Ingredientes mas utilizados.")
             print("2)Ingredientes con mas ventas")
             print("3)Historial de ventas")
-            print("4)Pizzas e ingredientes vendidos por dia")
+            print("4)Ventas Totales")
+            print("5)Pizzas e ingredientes vendidos por dia")
             print("0)Exit")
 
             option = self.validate_Entry()
@@ -23,16 +24,18 @@ class Estadisticas:
             elif(option == 3):
                 break
             elif(option == 4):
-                self.option_4()
                 break
+            elif(option == 5):
+                self.option_5()
             elif(option == 0):
                 break
+            self.csl(2)
             
         input("Gracias por su atencion hasta luego")
 
 
-    def option_4(self):
-        self.dataTest()
+    def option_5(self):
+        #self.dataTest()
 
         baseController = database.PizzaController(self.conn)
         pedidoController = database.PedidoController(self.conn)
