@@ -1,3 +1,5 @@
+from pizzaplanet import estadisticas
+
 class Main:
     def menu(self):
         while True:
@@ -12,6 +14,9 @@ class Main:
             if(option == 1):
                 break
             elif(option == 2):
+                self.cls(25)
+                e = estadisticas.Estadisticas()
+                e.main()
                 break
             elif(option == 3):
                 break

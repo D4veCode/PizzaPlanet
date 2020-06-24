@@ -98,6 +98,12 @@ class IngredienteController:
         self.__cursor.execute(sql, (lowName, price, lowTamano))
         return self.__cursor.lastrowid
 
+    def getVentaIngredientes(self):
+        sql = """SELECT name, COUNT(name), SUM(price) FROM Ingrediente GROUP BY name;"""
+        self.__cursor.execute(sql)
+        rows = self.__cursor.fetchall()
+        return rows
+
 
 class PedidoController:
 
@@ -112,6 +118,12 @@ class PedidoController:
              VALUES(?, ?, ?);"""
         self.__cursor.execute(sql, (fk_Cliente, pedido_Date, 0))
         return self.__cursor.lastrowid
+    
+    def getVentaTotal(self):
+        sql = """SELECT SUM(total_price) FROM Pedido;"""
+        self.__cursor.execute(sql)
+        row = self.__cursor.fetchall()
+        return row
 
 
 class PizzaController:
@@ -170,6 +182,12 @@ class PizzaController:
         self.updateBasePrice(fk_Base, self.basePrice)
         self.updatePedidoPrice(id_Pedido[0][0], self.pedidoPrice)
         return True
+
+    def getVentaPizzasTamaño(self):
+        sql = """SELECT tamano, COUNT(tamano) FROM Base GROUP BY tamano;"""
+        self.__cursor.execute(sql)
+        rows = self.__cursor.fetchall()
+        return rows
 
 
 def main():
