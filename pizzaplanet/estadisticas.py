@@ -29,7 +29,7 @@ class Estadisticas:
                 self.option_5()
             elif(option == 0):
                 break
-            self.csl(2)
+            self.cls(2)
             
         input("Gracias por su atencion hasta luego")
 
