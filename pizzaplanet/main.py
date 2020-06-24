@@ -1,6 +1,8 @@
+from .archiveManager import Archive
 class Main:
     def menu(self):
-        while True:
+        option = 1
+        while option != 0:
             print("Bienvenido al PizzaPlanet, esperamos su orden")
             print("1)Registrar pedido.")
             print("2)Realizar un reporte")
@@ -10,14 +12,15 @@ class Main:
             option = self.Validate_Entry()
 
             if(option == 1):
-                break
+                pass
             elif(option == 2):
-                break
+                pass
             elif(option == 3):
-                break
-            elif(option == 0):
-                break
-        input("Gracias por su atencion hasta luego")
+                fileName = input('Introduzca nombre de archivo: ')
+                arch = Archive(fileName)
+                arch.openFile()
+            
+        print("Gracias por su atencion hasta luego")
 
 
     def Validate_Entry(self):
