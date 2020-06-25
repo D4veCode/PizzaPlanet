@@ -52,8 +52,7 @@ class Archive:
                 pizzaBase.addPizzaIngrediente(idBase, item, tam)
 
 class Pedido:
-    pizzas = []
-    nombrecliente = ''
-    fecha = ''
-
-
+    def __init__(self, nombrecliente='', fecha='', pizzas=[])
+        self.nombrecliente = nombrecliente
+        self.fecha = fecha
+        self.pizzas = pizzas
