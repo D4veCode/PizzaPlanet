@@ -264,6 +264,16 @@ class PizzaController:
     def getIngredienteByTamano(self, name, tamano):
         lowName = name.lower()
         lowTamano = tamano.lower()
+
+        if lowName in ['champiñón', 'champiñon', 'champiñones']:
+            lowName = 'champinones'
+        if lowName in ['pimentón', 'pimentones']:
+            lowName = 'pimenton'
+        if lowName in ['salchichón', 'salchichones']:
+            lowName = 'salchichon'
+        if lowName in ['jamón', 'jamones']:
+            lowName = 'jamon'
+
         sql = """SELECT i.price, i.id_Ingrediente FROM Ingrediente as i
              WHERE i.name = ? AND i.tamano = ?;"""
         self.__cursor.execute(sql, (lowName, lowTamano,))
@@ -326,6 +336,3 @@ def main():
     with conn:
         createTables(conn)
         insertIngredients(conn)
-
-if __name__ == "__main__":
-    main()

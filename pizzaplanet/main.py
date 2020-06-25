@@ -5,9 +5,9 @@ from pizzaplanet import database
 
 class Main:
     def menu(self):
-        database.createTables(database.createConnection('pizzaplanet.db'))
-        option = 1
-        while option != 0:
+        database.main()
+        while True:
+            self.cls(25)
             print("Bienvenido al PizzaPlanet, esperamos su orden")
             print("1)Ver Combo del dia.")
             print("2)Realizar un reporte")
