@@ -59,6 +59,17 @@ def createTables(conn):
                         REFERENCES Base(id_Base));"""
     sqls.append(sql5)
 
+    sql6 = """CREATE TABLE IF NOT EXISTS Combo (
+                    id_Combo INTEGER PRIMARY KEY,
+                    dia TEXT NOT NULL,
+                    fk_Ingrediente INTEGER NOT NULL,
+                    tamano TEXT NOT NULL,
+                    precio_base INTEGER NOT NULL,
+                    descuento INTEGER NOT NULL,
+                    FOREIGN KEY (fk_Ingrediente)
+                        REFERENCES Ingrediente(id_Ingrediente));"""
+    sqls.append(sql6)
+
     cursor = conn.cursor()
     for sql in sqls:
         cursor.execute(sql)
@@ -121,6 +132,18 @@ class IngredienteController:
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
         return rows
+    
+    def getIngredienteIdByTamano(self, name, tamano):
+        sql = """SELECT id_Ingrediente from Ingrediente where name = ? and tamano = ?;"""
+        self.__cursor.execute(sql, (name,tamano))
+        row = self.__cursor.fetchall()
+        return row
+
+    def getIngredienteById(self, id_ingrediente):
+        sql = """SELECT name from Ingrediente where id_Ingrediente = ?;"""
+        self.__cursor.execute(sql, (id_ingrediente))
+        row = self.__cursor.fetchall()
+        return row
 
 class PedidoController:
 
@@ -205,7 +228,7 @@ class PizzaController:
         lowTamano = tamano.lower()
         sql = """SELECT i.price, i.id_Ingrediente FROM Ingrediente as i
              WHERE i.name = ? AND i.tamano = ?;"""
-        self.__cursor.execute(sql, (lowName, lowTamano))
+        self.__cursor.execute(sql, (lowName, lowTamano,))
         return self.__cursor.fetchall()
 
     def addPizzaIngrediente(self, fk_Base, name, tamano):
@@ -234,6 +257,30 @@ class PizzaController:
         rows = self.__cursor.fetchall()
         return rows
 
+class ComboController:
+    def __init__(self, connection):
+        self.__cursor = connection.cursor()
+
+    def __del__(self):
+        self.__cursor.close()
+    
+    def createCombo(self, dia, fk_ingrediente, tamano, precio_base, descuento):
+        print("Dia: ",dia)
+        print("FK: ",fk_ingrediente)
+        print("Tamano: ", tamano)
+        print("Precio base: ",precio_base)
+        print("descuento: ", descuento)
+        sql = """INSERT INTO Combo (dia, fk_Ingrediente, tamano, precio_base, descuento)
+             VALUES(?, ?, ?, ?, ?);"""
+        self.__cursor.execute(sql, (dia, fk_ingrediente, tamano, precio_base, descuento))
+
+    def getCombo(self, dia):
+        lowDia = dia.lower()
+        sql = """SELECT DISTINCT c.dia, c.tamano, c.precio_base, c.descuento, i.name, i.price FROM Combo as c, Base as b, Ingrediente as i
+             WHERE c.dia = ? and c.fk_Ingrediente = i.id_Ingrediente ORDER BY c.id_Combo desc;"""
+        self.__cursor.execute(sql, (lowDia,))
+        rows = self.__cursor.fetchall()
+        return rows
 
 def main():
     database = "pizzaplanet.db"
