@@ -76,6 +76,44 @@ def createTables(conn):
     cursor.close()
 
 
+def insertIngredients(conn):
+    sql = """SELECT name from Ingrediente;"""
+
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    response = cursor.fetchall()
+    cursor.close()
+    condition = len(response)
+    if (condition):
+        pass
+    else:
+        ingredienteC = IngredienteController(conn)
+        ingredienteC.createIngrediente('jamon', 1.5, 'personal')
+        ingredienteC.createIngrediente('jamon', 1.75, 'mediana')
+        ingredienteC.createIngrediente('jamon', 2, 'familiar')
+        ingredienteC.createIngrediente('champinones', 1.75, 'personal')
+        ingredienteC.createIngrediente('champinones', 2.05, 'mediana')
+        ingredienteC.createIngrediente('champinones', 2.5, 'familiar')
+        ingredienteC.createIngrediente('pimenton', 1.5, 'personal')
+        ingredienteC.createIngrediente('pimenton', 1.75, 'mediana')
+        ingredienteC.createIngrediente('pimenton', 2, 'familiar')
+        ingredienteC.createIngrediente('doble queso', 0.8, 'personal')
+        ingredienteC.createIngrediente('doble queso', 1.3, 'mediana')
+        ingredienteC.createIngrediente('doble queso', 1.7, 'familiar')
+        ingredienteC.createIngrediente('aceitunas', 1.8, 'personal')
+        ingredienteC.createIngrediente('aceitunas', 2.15, 'mediana')
+        ingredienteC.createIngrediente('aceitunas', 2.6, 'familiar')
+        ingredienteC.createIngrediente('pepperoni', 1.25, 'personal')
+        ingredienteC.createIngrediente('pepperoni', 1.7, 'mediana')
+        ingredienteC.createIngrediente('pepperoni', 1.9, 'familiar')
+        ingredienteC.createIngrediente('salchichon', 1.6, 'personal')
+        ingredienteC.createIngrediente('salchichon', 1.85, 'mediana')
+        ingredienteC.createIngrediente('salchichon', 2.1, 'familiar')
+        conn.commit()
+
+        del ingredienteC
+
+
 class ClienteController:
 
     def __init__(self, connection):
@@ -286,12 +324,8 @@ def main():
     database = "pizzaplanet.db"
     conn = createConnection(database)
     with conn:
-        pedidoc = PizzaController(conn)
-        idPedido = pedidoc.addPizzaIngrediente(1, 'cebolla', 'personal')
-        idPedido = pedidoc.addPizzaIngrediente(1, 'tocineta', 'personal')
-        idPedido = pedidoc.addPizzaIngrediente(1, 'tomate', 'personal')
-        print(idPedido)
-        del pedidoc
+        createTables(conn)
+        insertIngredients(conn)
 
 if __name__ == "__main__":
     main()
