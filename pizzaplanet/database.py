@@ -115,6 +115,13 @@ class IngredienteController:
         rows = self.__cursor.fetchall()
         return rows
 
+    def getPopularIngredientes(self):
+        sql = """SELECT i.name, COUNT(i.name), SUM(i.price) 
+        FROM Ingrediente as i, Pizza as p WHERE p.fk_Ingrediente = i.id_Ingrediente GROUP BY i.name ORDER BY COUNT(i.name) DESC;"""
+        self.__cursor.execute(sql)
+        rows = self.__cursor.fetchall()
+        return rows
+
 class PedidoController:
 
     def __init__(self, connection):
@@ -146,6 +153,16 @@ class PedidoController:
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
         return rows
+
+    def getAllPedidos(self):
+        sql = """SELECT p.pedido_Date, c.name, c.last_name, COUNT(b.fk_Pedido), p.total_Price
+        FROM Pedido as p, Cliente as c, Base as b
+        WHERE c.id_Cliente = p.fk_Cliente and p.id_Pedido = b.fk_Pedido
+        GROUP BY b.fk_Pedido
+        ORDER BY pedido_Date ASC, c.name ASC;"""
+        self.__cursor.execute(sql)
+        rows = self.__cursor.fetchall()
+        return rows   
 
 
 class PizzaController:

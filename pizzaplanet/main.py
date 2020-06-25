@@ -3,6 +3,7 @@ from pizzaplanet import estadisticas
 class Main:
     def menu(self):
         while True:
+            self.cls(2)
             print("Bienvenido al PizzaPlanet, esperamos su orden")
             print("1)Registrar pedido.")
             print("2)Realizar un reporte")
@@ -17,7 +18,6 @@ class Main:
                 self.cls(25)
                 e = estadisticas.Estadisticas()
                 e.main()
-                break
             elif(option == 3):
                 break
             elif(option == 0):
