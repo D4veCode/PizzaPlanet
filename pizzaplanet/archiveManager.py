@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from .database import * 
 class Archive:
     def __init__(self, fileName):
         self.fileName = '{}.pz'.format(fileName)
@@ -39,7 +40,20 @@ class Archive:
             print(data)
 
     def guardarPedido(self, ped):
-        pass
+        db = createConnection('database.db')
+        client = ClienteController(db)
+        name = ped.nombrecliente.split(' ')
+        idCliente = client.createCliente(name[0], name[1])
+        pedido = PedidoController(db)
+        idPedido = pedido.createPedido(idCliente, ped.fecha)
+        for pizza in ped.pizzas:
+            pizzaController = PizzaController(db)
+            pizza = list(pizza)
+            idBase = pizzaController.createPizza(idPedido, pizza[0])
+            tam = pizza[0]
+            pizza.pop(0)
+            for item in pizza:
+                pizzaBase.addPizzaIngrediente(idBase, item, tam)
 
 class Pedido:
     pizzas = []
