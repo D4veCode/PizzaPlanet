@@ -83,8 +83,8 @@ def insertIngredients(conn):
     cursor.execute(sql)
     response = cursor.fetchall()
     cursor.close()
-    condition = len(response)
-    if (condition):
+    filled = len(response)
+    if (filled):
         pass
     else:
         ingredienteC = IngredienteController(conn)
