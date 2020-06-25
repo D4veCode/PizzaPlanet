@@ -136,6 +136,9 @@ class Combo:
 
             opcion = self.validate_Entry3()
             ingredienteController = database.IngredienteController(self.conn)
+            self.conn.commit()
+            a = ingredienteController.createIngrediente('champiñones', 1.75, 'personal')
+            print("ID INGREDIENTE: ",a)
 
             if (opcion == 1):
                 self.menu_crear_combo4(dia, tamano, precio_base, ingredienteController.getIngredienteIdByTamano('jamon',tamano))
@@ -173,6 +176,7 @@ class Combo:
 
             comboController = database.ComboController(self.conn)
             comboController.createCombo(dia, fk_ingrediente[0][0], tamano, precio_base, descuento)
+            self.conn.commit()
             break
 
     def validate_Entry(self):

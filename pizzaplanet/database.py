@@ -273,7 +273,7 @@ class ComboController:
         sql = """INSERT INTO Combo (dia, fk_Ingrediente, tamano, precio_base, descuento)
              VALUES(?, ?, ?, ?, ?);"""
         self.__cursor.execute(sql, (dia, fk_ingrediente, tamano, precio_base, descuento))
-
+        
     def getCombo(self, dia):
         lowDia = dia.lower()
         sql = """SELECT DISTINCT c.dia, c.tamano, c.precio_base, c.descuento, i.name, i.price FROM Combo as c, Base as b, Ingrediente as i
