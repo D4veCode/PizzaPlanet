@@ -1,10 +1,12 @@
 from pizzaplanet import estadisticas
 from pizzaplanet import combo
+from .archiveManager import Archive
+
 
 class Main:
     def menu(self):
-        while True:
-            self.cls(2)
+        option = 1
+        while option != 0:
             print("Bienvenido al PizzaPlanet, esperamos su orden")
             print("1)Registrar pedido.")
             print("2)Realizar un reporte")
@@ -23,6 +25,9 @@ class Main:
                 e.main()
 
             elif(option == 3):
+                fileName = input('Introduzca nombre de archivo: ')
+                arch = Archive(fileName)
+                arch.openFile()
                 break
 
             elif(option == 4):
@@ -31,9 +36,9 @@ class Main:
                 c.main()
 
             elif(option == 0):
-                break
-
-        input("Gracias por su atencion hasta luego")
+                break           
+       
+        print("Gracias por su atencion hasta luego")
 
 
     def Validate_Entry(self):
