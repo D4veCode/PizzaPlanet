@@ -30,7 +30,6 @@ class Estadisticas:
             
 
     def option_1(self):
-        #self.dataTest()
         ingredienteController = database.IngredienteController(self.conn)
         ingredientes = ingredienteController.getPopularIngredientes()
         self.cls(1)
@@ -43,7 +42,6 @@ class Estadisticas:
                 break
     
     def option_2(self):
-        self.dataTest()
         pedidoController = database.PedidoController(self.conn)
         pedidos = pedidoController.getAllPedidos()
         for pedido in pedidos:
@@ -58,7 +56,6 @@ class Estadisticas:
 
 
     def option_3(self):
-        #self.dataTest()
         baseController = database.PizzaController(self.conn)
         pedidoController = database.PedidoController(self.conn)
         ingredienteController = database.IngredienteController(self.conn)
@@ -87,8 +84,6 @@ class Estadisticas:
             print(row[0] + "  |  " + str(row[1]) + "  |  " + str(row[2]))
 
     def option_4(self):
-        #self.dataTest()
-
         baseController = database.PizzaController(self.conn)
         pedidoController = database.PedidoController(self.conn)
         ingredienteController = database.IngredienteController(self.conn)
@@ -138,35 +133,4 @@ class Estadisticas:
     def cls(self, num): 
         print ("\n" * num)
 
-
-    def dataTest(self):
-        baseController = database.PizzaController(self.conn)
-        pedidoController = database.PedidoController(self.conn)
-        clienteController = database.ClienteController(self.conn)
-
-        idc = clienteController.createCliente("Fernando", "Rodriguez")
-
-        idp = pedidoController.createPedido(idc,"23/04/2020")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"mediana")
-        baseController.createPizza(idp,"mediana")
-        baseController.updatePedidoPrice(idp,110)
-
-        idp = pedidoController.createPedido(idc,date.today().strftime("%d/%m/%Y"))
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"mediana")
-        baseController.createPizza(idp,"mediana")
-        baseController.updatePedidoPrice(idp,90)
-
-        idp = pedidoController.createPedido(idc,"23/04/2020")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"mediana")
-        baseController.createPizza(idp,"mediana")
-        baseController.updatePedidoPrice(idp,110)
 
