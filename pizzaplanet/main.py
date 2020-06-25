@@ -1,10 +1,11 @@
 from pizzaplanet import estadisticas
 from pizzaplanet import combo
 from pizzaplanet import archivemanager
-
+from pizzaplanet import database
 
 class Main:
     def menu(self):
+        database.createTables(database.createConnection('pizzaplanet.db'))
         option = 1
         while option != 0:
             print("Bienvenido al PizzaPlanet, esperamos su orden")

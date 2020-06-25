@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
-from pizzaplanet import database 
+from pizzaplanet import database as db
 class Archive:
     def __init__(self, fileName):
         self.fileName = '{}.pz'.format(fileName)
 
     def openFile(self):
         try:
-            print(self.fileName)
             with open(self.fileName, 'r') as f:
                 valido = True
                 for line in f:
@@ -39,20 +38,22 @@ class Archive:
             ped.pizzas.append(data)
 
     def guardarPedido(self, ped):
-        db = createConnection('database.db')
-        client = ClienteController(db)
+        conn = db.createConnection('pizzaplanet.db')
+        client = db.ClienteController(conn)
         name = ped.nombrecliente.split(' ')
         idCliente = client.createCliente(name[0], name[1])
-        pedido = PedidoController(db)
+        pedido = db.PedidoController(conn)
         idPedido = pedido.createPedido(idCliente, ped.fecha)
         for pizza in ped.pizzas:
-            pizzaController = PizzaController(db)
+            pizzaController = db.PizzaController(conn)
             pizza = list(pizza)
+            print(pizza)
             idBase = pizzaController.createPizza(idPedido, pizza[0])
             tam = pizza[0]
             pizza.pop(0)
             for item in pizza:
-                pizzaBase.addPizzaIngrediente(idBase, item, tam)
+                print(item)
+                pizzaController.addPizzaIngrediente(idBase, item, tam)
 
 class Pedido:
     def __init__(self, nombrecliente='', fecha='', pizzas=[]):
