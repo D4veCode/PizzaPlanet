@@ -27,7 +27,7 @@ class Main:
 
             elif(option == 3):
                 self.cls(25)
-                fileName = input('Introduzca nombre de archivo: ')
+                fileName = input("Introduzca ruta o nombre de archivo \n(si el archivo esta en la mismo directorio, coloque solo el nombre. \nSi el archivo esta en otra ruta coloque la ruta con el nombre del archivo Ej: /path/to/dir/nombrearchivo): \n")
                 arch = archivemanager.Archive(fileName)
                 arch.openFile()
 
