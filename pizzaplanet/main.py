@@ -1,21 +1,25 @@
 from pizzaplanet import estadisticas
 from pizzaplanet import combo
+from pizzaplanet import archivemanager
+from pizzaplanet import database
 
 class Main:
     def menu(self):
+        database.main()
         while True:
-            self.cls(2)
+            self.cls(25)
             print("Bienvenido al PizzaPlanet, esperamos su orden")
-            print("1)Registrar pedido.")
+            print("1)Ver Combo del dia.")
             print("2)Realizar un reporte")
             print("3)Cargar Archivos")
-            print("4)Ver Combo del dia")
             print("0)Exit")
 
             option = self.Validate_Entry()
 
             if(option == 1):
-                break
+                self.cls(25)
+                c = combo.Combo()
+                c.main()
 
             elif(option == 2):
                 self.cls(25)
@@ -23,24 +27,22 @@ class Main:
                 e.main()
 
             elif(option == 3):
-                break
-
-            elif(option == 4):
                 self.cls(25)
-                c = combo.Combo()
-                c.main()
+                fileName = input("Introduzca ruta o nombre de archivo \n(si el archivo esta en la mismo directorio, coloque solo el nombre. \nSi el archivo esta en otra ruta coloque la ruta con el nombre del archivo Ej: /path/to/dir/nombrearchivo): \n")
+                arch = archivemanager.Archive(fileName)
+                arch.openFile()
 
             elif(option == 0):
-                break
+                break    
 
-        input("Gracias por su atencion hasta luego")
+        print("Gracias por su atencion hasta luego")
 
 
     def Validate_Entry(self):
         entry = input("Por favor ingrese la opcion: ")
         try:
             entry = int(entry)
-            if (entry < 0) or (entry > 4):
+            if (entry < 0) or (entry > 3):
                 self.cls(25)
                 print("Opcion invalida!! Ingrese una opcion valida")
             else:

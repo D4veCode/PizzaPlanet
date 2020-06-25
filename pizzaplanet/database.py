@@ -76,6 +76,44 @@ def createTables(conn):
     cursor.close()
 
 
+def insertIngredients(conn):
+    sql = """SELECT name from Ingrediente;"""
+
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    response = cursor.fetchall()
+    cursor.close()
+    filled = len(response)
+    if (filled):
+        pass
+    else:
+        ingredienteC = IngredienteController(conn)
+        ingredienteC.createIngrediente('jamon', 1.5, 'personal')
+        ingredienteC.createIngrediente('jamon', 1.75, 'mediana')
+        ingredienteC.createIngrediente('jamon', 2, 'familiar')
+        ingredienteC.createIngrediente('champinones', 1.75, 'personal')
+        ingredienteC.createIngrediente('champinones', 2.05, 'mediana')
+        ingredienteC.createIngrediente('champinones', 2.5, 'familiar')
+        ingredienteC.createIngrediente('pimenton', 1.5, 'personal')
+        ingredienteC.createIngrediente('pimenton', 1.75, 'mediana')
+        ingredienteC.createIngrediente('pimenton', 2, 'familiar')
+        ingredienteC.createIngrediente('doble queso', 0.8, 'personal')
+        ingredienteC.createIngrediente('doble queso', 1.3, 'mediana')
+        ingredienteC.createIngrediente('doble queso', 1.7, 'familiar')
+        ingredienteC.createIngrediente('aceitunas', 1.8, 'personal')
+        ingredienteC.createIngrediente('aceitunas', 2.15, 'mediana')
+        ingredienteC.createIngrediente('aceitunas', 2.6, 'familiar')
+        ingredienteC.createIngrediente('pepperoni', 1.25, 'personal')
+        ingredienteC.createIngrediente('pepperoni', 1.7, 'mediana')
+        ingredienteC.createIngrediente('pepperoni', 1.9, 'familiar')
+        ingredienteC.createIngrediente('salchichon', 1.6, 'personal')
+        ingredienteC.createIngrediente('salchichon', 1.85, 'mediana')
+        ingredienteC.createIngrediente('salchichon', 2.1, 'familiar')
+        conn.commit()
+
+        del ingredienteC
+
+
 class ClienteController:
 
     def __init__(self, connection):
@@ -226,6 +264,16 @@ class PizzaController:
     def getIngredienteByTamano(self, name, tamano):
         lowName = name.lower()
         lowTamano = tamano.lower()
+
+        if lowName in ['champiñón', 'champiñon', 'champiñones']:
+            lowName = 'champinones'
+        if lowName in ['pimentón', 'pimentones']:
+            lowName = 'pimenton'
+        if lowName in ['salchichón', 'salchichones']:
+            lowName = 'salchichon'
+        if lowName in ['jamón', 'jamones']:
+            lowName = 'jamon'
+
         sql = """SELECT i.price, i.id_Ingrediente FROM Ingrediente as i
              WHERE i.name = ? AND i.tamano = ?;"""
         self.__cursor.execute(sql, (lowName, lowTamano,))
@@ -286,12 +334,5 @@ def main():
     database = "pizzaplanet.db"
     conn = createConnection(database)
     with conn:
-        pedidoc = PizzaController(conn)
-        idPedido = pedidoc.addPizzaIngrediente(1, 'cebolla', 'personal')
-        idPedido = pedidoc.addPizzaIngrediente(1, 'tocineta', 'personal')
-        idPedido = pedidoc.addPizzaIngrediente(1, 'tomate', 'personal')
-        print(idPedido)
-        del pedidoc
-
-if __name__ == "__main__":
-    main()
+        createTables(conn)
+        insertIngredients(conn)

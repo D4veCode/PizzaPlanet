@@ -11,7 +11,7 @@ class Estadisticas:
             print("1)Ingredientes mas populares.")
             print("2)Historial de ventas")
             print("3)Ventas por producto")
-            print("4)Ventas por producto filtrado por dia")
+            print("4)Generar Archivo de ventas por producto filtrado por dia")
             print("0)Exit")
 
             option = self.validate_Entry()
@@ -24,13 +24,14 @@ class Estadisticas:
                 self.option_3()
             elif(option == 4):
                 self.option_4()
+                self.cls(1)
+                print("Creado resumen_ops.pz")
             elif(option == 0):
                 break
             self.cls(2)
             
 
     def option_1(self):
-        #self.dataTest()
         ingredienteController = database.IngredienteController(self.conn)
         ingredientes = ingredienteController.getPopularIngredientes()
         self.cls(1)
@@ -43,7 +44,6 @@ class Estadisticas:
                 break
     
     def option_2(self):
-        self.dataTest()
         pedidoController = database.PedidoController(self.conn)
         pedidos = pedidoController.getAllPedidos()
         for pedido in pedidos:
@@ -58,7 +58,6 @@ class Estadisticas:
 
 
     def option_3(self):
-        #self.dataTest()
         baseController = database.PizzaController(self.conn)
         pedidoController = database.PedidoController(self.conn)
         ingredienteController = database.IngredienteController(self.conn)
@@ -87,38 +86,36 @@ class Estadisticas:
             print(row[0] + "  |  " + str(row[1]) + "  |  " + str(row[2]))
 
     def option_4(self):
-        #self.dataTest()
-
         baseController = database.PizzaController(self.conn)
         pedidoController = database.PedidoController(self.conn)
         ingredienteController = database.IngredienteController(self.conn)
 
         days = pedidoController.getDays()
+        with open('resumen_ops.pz', 'w') as f:
+            for day in days:
+                today = day[0]
+                pizzas = baseController.getVentaPizzasTamañoByDay(today)
+                ventaTotal = pedidoController.getVentaTotalByDay(today)
+                ingredientes = ingredienteController.getVentaIngredientesByDay(today)
 
-        for day in days:
-            today = day[0]
-            pizzas = baseController.getVentaPizzasTamañoByDay(today)
-            ventaTotal = pedidoController.getVentaTotalByDay(today)
-            ingredientes = ingredienteController.getVentaIngredientesByDay(today)
+                self.cls(1)
+                f.write("PEDIDO \n")
+                f.write("Fecha: {} \n".format(today))
+                f.write("Venta Total: {} \n".format(ventaTotal[0][0]))
 
-            self.cls(1)
-            print("PEDIDO")
-            print("Fecha: {}".format(today))
-            print("Venta Total: {}".format(ventaTotal[0][0]))
-
-            print("Ventas por pizza (sin incluir adicionales)")
-            for row in pizzas:
-                if (row[0] ==   "personal"):
-                    price = 10
-                elif (row[0] == "mediana"):
-                    price = 15
-                elif (row[0] == "familiar"):
-                    price = 20
-                total = row[1]*price
-                print(row[0] + "  |  " + str(row[1]) + "  |  " + str(total))
-            print("Ventas por Ingrediente:")
-            for row in ingredientes:
-                print(row[0] + "  |  " + str(row[1]) + "  |  " + str(row[2]))
+                f.write("Ventas por pizza (sin incluir adicionales) \n")
+                for row in pizzas:
+                    if (row[0] ==   "personal"):
+                        price = 10
+                    elif (row[0] == "mediana"):
+                        price = 15
+                    elif (row[0] == "familiar"):
+                        price = 20
+                    total = row[1]*price
+                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " + str(total) + "\n")
+                f.write("Ventas por Ingrediente: \n")
+                for row in ingredientes:
+                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " + str(row[2]) + "\n")
 
 
     def validate_Entry(self):
@@ -138,35 +135,4 @@ class Estadisticas:
     def cls(self, num): 
         print ("\n" * num)
 
-
-    def dataTest(self):
-        baseController = database.PizzaController(self.conn)
-        pedidoController = database.PedidoController(self.conn)
-        clienteController = database.ClienteController(self.conn)
-
-        idc = clienteController.createCliente("Fernando", "Rodriguez")
-
-        idp = pedidoController.createPedido(idc,"23/04/2020")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"mediana")
-        baseController.createPizza(idp,"mediana")
-        baseController.updatePedidoPrice(idp,110)
-
-        idp = pedidoController.createPedido(idc,date.today().strftime("%d/%m/%Y"))
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"mediana")
-        baseController.createPizza(idp,"mediana")
-        baseController.updatePedidoPrice(idp,90)
-
-        idp = pedidoController.createPedido(idc,"23/04/2020")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"personal")
-        baseController.createPizza(idp,"familiar")
-        baseController.createPizza(idp,"mediana")
-        baseController.createPizza(idp,"mediana")
-        baseController.updatePedidoPrice(idp,110)
 
