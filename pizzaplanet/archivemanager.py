@@ -26,6 +26,8 @@ class Archive:
                         else:
                             print('Pedido invalido!')
                             valido = False
+            
+            print('Archivo leído con éxito! ')
         except IOError as e:
             print('Ruta no valida o no existe archivo con ese nombre')
         except Exception as err:
