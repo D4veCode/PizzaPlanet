@@ -238,9 +238,17 @@ class PizzaController:
 
     def createPizza(self, fk_Pedido, tamano):
         lowTamano = tamano.lower()
+        if('personal' in lowTamano):
+            price = 10
+        elif (lowTamano in lowTamano):
+            price = 15
+        else:
+            price = 20
         sql = """INSERT INTO Base (fk_Pedido, tamano, price)
              VALUES(?, ?, ?);"""
-        self.__cursor.execute(sql, (fk_Pedido, lowTamano, 0))
+        self.__cursor.execute(sql, (fk_Pedido, lowTamano, price))
+        self.basePrice = price
+        self.pedidoPrice = price
         return self.__cursor.lastrowid
 
     def getPedidoIdFromBase(self, id_Base):
