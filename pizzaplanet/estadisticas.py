@@ -11,7 +11,7 @@ class Estadisticas:
             print("1)Ingredientes mas populares.")
             print("2)Historial de ventas")
             print("3)Ventas por producto")
-            print("4)Ventas por producto filtrado por dia")
+            print("4)Generar Archivo de ventas por producto filtrado por dia")
             print("0)Exit")
 
             option = self.validate_Entry()
@@ -24,6 +24,8 @@ class Estadisticas:
                 self.option_3()
             elif(option == 4):
                 self.option_4()
+                self.cls(1)
+                print("Creado resumen_ops.pz")
             elif(option == 0):
                 break
             self.cls(2)
