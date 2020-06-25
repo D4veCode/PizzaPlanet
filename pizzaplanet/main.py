@@ -26,10 +26,10 @@ class Main:
                 e.main()
 
             elif(option == 3):
+                self.cls(25)
                 fileName = input('Introduzca nombre de archivo: ')
                 arch = archivemanager.Archive(fileName)
                 arch.openFile()
-                break
 
             elif(option == 4):
                 self.cls(25)

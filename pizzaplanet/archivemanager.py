@@ -2,6 +2,7 @@
 import os
 from pizzaplanet import database as db
 class Archive:
+    conn = db.createConnection("pizzaplanet.db")
     def __init__(self, fileName):
         self.fileName = '{}.pz'.format(fileName)
 
@@ -15,7 +16,7 @@ class Archive:
                     elif line.strip() == 'FIN_PEDIDO':
                         if valido == True:
                             self.guardarPedido(pedido)
-                        del pedido
+                        pedido.pizzas.clear()
                         valido = True
                     elif valido == True:
                         linea = line.strip().split(';')
@@ -38,23 +39,24 @@ class Archive:
             ped.pizzas.append(data)
 
     def guardarPedido(self, ped):
-        conn = db.createConnection('pizzaplanet.db')
-        client = db.ClienteController(conn)
+        client = db.ClienteController(self.conn)
         name = ped.nombrecliente.split(' ')
         idCliente = client.createCliente(name[0], name[1])
-        pedido = db.PedidoController(conn)
+        self.conn.commit()
+        pedido = db.PedidoController(self.conn)
         idPedido = pedido.createPedido(idCliente, ped.fecha)
+        self.conn.commit()
         for pizza in ped.pizzas:
-            pizzaController = db.PizzaController(conn)
+            pizzaController = db.PizzaController(self.conn)
             pizza = list(pizza)
-            print(pizza)
             idBase = pizzaController.createPizza(idPedido, pizza[0])
+            self.conn.commit()
             tam = pizza[0]
             pizza.pop(0)
             for item in pizza:
-                print(item)
                 pizzaController.addPizzaIngrediente(idBase, item, tam)
-
+                self.conn.commit()
+            
 class Pedido:
     def __init__(self, nombrecliente='', fecha='', pizzas=[]):
         self.nombrecliente = nombrecliente
