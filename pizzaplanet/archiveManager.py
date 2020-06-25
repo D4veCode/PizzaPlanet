@@ -20,7 +20,6 @@ class Archive:
                     elif valido == True:
                         linea = line.strip().split(';')
                         if len(linea[0]) != 0:
-                            print(linea)
                             data = tuple(linea)
                             self.asignarData(data, pedido)
                         else:
@@ -33,11 +32,8 @@ class Archive:
         if data[0] not in ['personal', 'mediana', 'familiar']:
             ped.nombrecliente = data[0]
             ped.fecha = data[1]
-            print(ped.nombrecliente)
-            print(ped.fecha)
         else:
             ped.pizzas.append(data)
-            print(data)
 
     def guardarPedido(self, ped):
         db = createConnection('database.db')
