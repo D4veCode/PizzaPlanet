@@ -1,6 +1,6 @@
 from pizzaplanet import estadisticas
 from pizzaplanet import combo
-from .archiveManager import Archive
+from pizzaplanet import archivemanager
 
 
 class Main:
@@ -26,7 +26,7 @@ class Main:
 
             elif(option == 3):
                 fileName = input('Introduzca nombre de archivo: ')
-                arch = Archive(fileName)
+                arch = archivemanager.Archive(fileName)
                 arch.openFile()
                 break
 
@@ -37,7 +37,6 @@ class Main:
 
             elif(option == 0):
                 break           
-       
         print("Gracias por su atencion hasta luego")
 
 
