@@ -89,31 +89,31 @@ class Estadisticas:
         ingredienteController = database.IngredienteController(self.conn)
 
         days = pedidoController.getDays()
+        with open('resumen_ops.pz', 'w') as f:
+            for day in days:
+                today = day[0]
+                pizzas = baseController.getVentaPizzasTamañoByDay(today)
+                ventaTotal = pedidoController.getVentaTotalByDay(today)
+                ingredientes = ingredienteController.getVentaIngredientesByDay(today)
 
-        for day in days:
-            today = day[0]
-            pizzas = baseController.getVentaPizzasTamañoByDay(today)
-            ventaTotal = pedidoController.getVentaTotalByDay(today)
-            ingredientes = ingredienteController.getVentaIngredientesByDay(today)
+                self.cls(1)
+                f.write("PEDIDO \n")
+                f.write("Fecha: {} \n".format(today))
+                f.write("Venta Total: {} \n".format(ventaTotal[0][0]))
 
-            self.cls(1)
-            print("PEDIDO")
-            print("Fecha: {}".format(today))
-            print("Venta Total: {}".format(ventaTotal[0][0]))
-
-            print("Ventas por pizza (sin incluir adicionales)")
-            for row in pizzas:
-                if (row[0] ==   "personal"):
-                    price = 10
-                elif (row[0] == "mediana"):
-                    price = 15
-                elif (row[0] == "familiar"):
-                    price = 20
-                total = row[1]*price
-                print(row[0] + "  |  " + str(row[1]) + "  |  " + str(total))
-            print("Ventas por Ingrediente:")
-            for row in ingredientes:
-                print(row[0] + "  |  " + str(row[1]) + "  |  " + str(row[2]))
+                f.write("Ventas por pizza (sin incluir adicionales) \n")
+                for row in pizzas:
+                    if (row[0] ==   "personal"):
+                        price = 10
+                    elif (row[0] == "mediana"):
+                        price = 15
+                    elif (row[0] == "familiar"):
+                        price = 20
+                    total = row[1]*price
+                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " + str(total) + "\n")
+                f.write("Ventas por Ingrediente: \n")
+                for row in ingredientes:
+                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " + str(row[2]) + "\n")
 
 
     def validate_Entry(self):
