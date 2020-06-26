@@ -9,7 +9,7 @@ class Estadisticas:
     def main(self):
         while True:
             print("Que reporte desea visualizar?")
-            print("1)Ingredientes mas populares.")
+            print("1)Ingredientes mas populares")
             print("2)Historial de ventas")
             print("3)Ventas por producto")
             print("4)Generar Archivo de ventas por producto filtrado por dia")
