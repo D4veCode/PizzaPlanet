@@ -199,6 +199,12 @@ class IngredienteController:
         return rows
 
     def getIngredienteIdByTamano(self, name, tamano):
+        """Return the ingredients id given his name and size
+
+        Keyword arguments:
+        name -- ingredient's name
+        tamano -- ingredient's size
+        """
         sql = """SELECT id_Ingrediente FROM Ingrediente
                   WHERE name = ? AND tamano = ?;"""
         self.__cursor.execute(sql, (name, tamano))
@@ -206,6 +212,11 @@ class IngredienteController:
         return row
 
     def getIngredienteById(self, id_ingrediente):
+        """Return the ingredients given his id
+
+        Keyword arguments:
+        id_ingredient -- ingredient's id
+        """
         sql = """SELECT name FROM Ingrediente where id_Ingrediente = ?;"""
         self.__cursor.execute(sql, (id_ingrediente))
         row = self.__cursor.fetchall()
@@ -221,24 +232,37 @@ class PedidoController:
         self.__cursor.close()
 
     def createPedido(self, fk_Cliente, pedido_Date):
+        """Insert a Pedido in the database.
+
+        Keyword arguments:
+        fk_Cliente -- client's id
+        pedido_Date -- pedido's date
+        """
         sql = """INSERT INTO Pedido (fk_Cliente, pedido_Date, total_price)
              VALUES(?, ?, ?);"""
         self.__cursor.execute(sql, (fk_Cliente, pedido_Date, 0))
         return self.__cursor.lastrowid
 
     def getVentaTotal(self):
+        """Return sales"""
         sql = """SELECT SUM(total_price) FROM Pedido;"""
         self.__cursor.execute(sql)
         row = self.__cursor.fetchall()
         return row
 
     def getVentaTotalByDay(self, date):
+        """Return sales given a date
+
+        Keyword arguments:
+        date -- date sales
+        """
         sql = """SELECT SUM(total_price) FROM Pedido WHERE pedido_Date = ?;"""
         self.__cursor.execute(sql, (date,))
         row = self.__cursor.fetchall()
         return row
 
     def getDays(self):
+        """Return pedido's dates"""
         sql = """SELECT DISTINCT pedido_Date
                   FROM Pedido ORDER BY pedido_Date ASC;"""
         self.__cursor.execute(sql)
@@ -246,6 +270,7 @@ class PedidoController:
         return rows
 
     def getAllPedidos(self):
+        """Return all pedidos of the database"""
         sql = """SELECT p.pedido_Date, c.name, c.last_name,
                   COUNT(b.fk_Pedido), p.total_Price
                   FROM Pedido as p, Cliente as c, Base as b
@@ -269,6 +294,12 @@ class PizzaController:
         self.__cursor.close()
 
     def createPizza(self, fk_Pedido, tamano):
+        """Insert a Pizza in the database.
+
+        Keyword arguments:
+        fk_Pedido -- pedido's id
+        tamano -- pizza's size
+        """
         lowTamano = tamano.lower()
         if('personal' in lowTamano):
             price = 10
@@ -284,24 +315,47 @@ class PizzaController:
         return self.__cursor.lastrowid
 
     def getPedidoIdFromBase(self, id_Base):
+        """Return the Pedido's id given the pizza's id
+
+        Keyword arguments:
+        id_Base -- pizza's id
+        """
         sql = """SELECT b.fk_Pedido FROM Base as b
              WHERE b.id_Base = ?;"""
         self.__cursor.execute(sql, (id_Base,))
         return self.__cursor.fetchall()
 
     def updatePedidoPrice(self, id_Pedido, precio):
+        """Update the Pedido's price given his id
+
+        Keyword arguments:
+        id_Pedido -- pedido's id
+        precio -- pedido's price 
+        """
         sql = """UPDATE Pedido SET total_price = ?
              WHERE id_Pedido = ?;"""
         self.__cursor.execute(sql, (precio, id_Pedido))
         return True
 
     def updateBasePrice(self, id_Base, precio):
+        """Update the Pizza's price given his id
+
+        Keyword arguments:
+        id_Base -- Pizza's id
+        precio -- pizza's price 
+        """
         sql = """UPDATE Base SET price = ?
              WHERE id_Base = ?;"""
         self.__cursor.execute(sql, (precio, id_Base))
         return True
 
     def getIngredienteByTamano(self, name, tamano):
+        """Return the ingredient given his name and size
+
+        Keyword arguments:
+        name -- ingredient's name
+        tamano -- ingredient's size
+        """
         lowName = name.lower()
         lowTamano = tamano.lower()
 
@@ -320,6 +374,12 @@ class PizzaController:
         return self.__cursor.fetchall()
 
     def addPizzaIngrediente(self, fk_Base, name, tamano):
+        """Insert Pizza's ingredients 
+
+        Keyword arguments:
+        name -- ingredient's name
+        tamano -- ingredient's size
+        """
         ingrediente = self.getIngredienteByTamano(name, tamano)
         ingredientePrice = ingrediente[0][0]
         idIngrediente = ingrediente[0][1]
@@ -334,12 +394,18 @@ class PizzaController:
         return True
 
     def getVentaPizzasTamaño(self):
+        """Return count of pizza's sizes"""
         sql = """SELECT tamano, COUNT(tamano) FROM Base GROUP BY tamano;"""
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
         return rows
 
     def getVentaPizzasTamañoByDay(self, date):
+        """Return count of pizza's sizes given a date 
+
+        Keyword arguments:
+        date -- date sales
+        """
         sql = """SELECT b.tamano, COUNT(b.tamano)
                   FROM Base as b, Pedido as p
                   WHERE b.fk_Pedido = p.id_Pedido
@@ -357,6 +423,15 @@ class ComboController:
         self.__cursor.close()
 
     def createCombo(self, dia, fk_ingrediente, tamano, precio_base, descuento):
+        """Insert a Combo in the database.
+
+        Keyword arguments:
+        fk_ingrediente -- ingredient's id
+        tamano -- pizza's size
+        dia -- combo's date
+        precio_base -- combo's price
+        descuento -- combo's discount
+        """
         print("Dia: ", dia)
         print("FK: ", fk_ingrediente)
         print("Tamano: ", tamano)
@@ -369,10 +444,15 @@ class ComboController:
                                     precio_base, descuento))
 
     def getCombo(self, dia):
+        """Return combo given a date 
+
+        Keyword arguments:
+        date -- date sales
+        """
         lowDia = dia.lower()
         sql = """SELECT DISTINCT c.dia, c.tamano, c.precio_base,
                                   c.descuento, i.name, i.price
-                  FROM Combo as c, Base as b, Ingrediente as i
+                  FROM Combo as c, Ingrediente as i
                   WHERE c.dia = ? and c.fk_Ingrediente = i.id_Ingrediente
                   ORDER BY c.id_Combo desc;"""
         self.__cursor.execute(sql, (lowDia,))
