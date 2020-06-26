@@ -1,6 +1,7 @@
 from pizzaplanet import database
 from datetime import date
 
+
 class Estadisticas:
 
     conn = database.createConnection("pizzaplanet.db")
@@ -18,18 +19,21 @@ class Estadisticas:
 
             if(option == 1):
                 self.option_1()
+
             elif(option == 2):
                 self.option_2()
+
             elif(option == 3):
                 self.option_3()
+
             elif(option == 4):
                 self.option_4()
                 self.cls(1)
                 print("Creado resumen_ops.pz")
+
             elif(option == 0):
                 break
             self.cls(2)
-            
 
     def option_1(self):
         ingredienteController = database.IngredienteController(self.conn)
@@ -42,7 +46,7 @@ class Estadisticas:
                 print(row[0] + "  |  " + str(row[1]))
             else:
                 break
-    
+
     def option_2(self):
         pedidoController = database.PedidoController(self.conn)
         pedidos = pedidoController.getAllPedidos()
@@ -50,12 +54,9 @@ class Estadisticas:
             self.cls(0)
             print("PEDIDO:")
             print("Fecha de pedido: {}".format(pedido[0]))
-            print("Nombre cliente:  {} {}".format(pedido[1],pedido[2]))
+            print("Nombre cliente:  {} {}".format(pedido[1], pedido[2]))
             print("Numero de pizzas ordenadas: {}".format(pedido[3]))
             print("Monto de factura: {}".format(pedido[4]))
-            
-
-
 
     def option_3(self):
         baseController = database.PizzaController(self.conn)
@@ -73,7 +74,7 @@ class Estadisticas:
 
         print("Ventas por pizza (sin incluir adicionales)")
         for row in pizzas:
-            if (row[0] ==   "personal"):
+            if (row[0] == "personal"):
                 price = 10
             elif (row[0] == "mediana"):
                 price = 15
@@ -105,18 +106,19 @@ class Estadisticas:
 
                 f.write("Ventas por pizza (sin incluir adicionales) \n")
                 for row in pizzas:
-                    if (row[0] ==   "personal"):
+                    if (row[0] == "personal"):
                         price = 10
                     elif (row[0] == "mediana"):
                         price = 15
                     elif (row[0] == "familiar"):
                         price = 20
                     total = row[1]*price
-                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " + str(total) + "\n")
+                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " +
+                        str(total) + "\n")
                 f.write("Ventas por Ingrediente: \n")
                 for row in ingredientes:
-                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " + str(row[2]) + "\n")
-
+                    f.write(row[0] + "  |  " + str(row[1]) + "  |  " +
+                    str(row[2]) + "\n")
 
     def validate_Entry(self):
         entry = input("Por favor ingrese la opcion: ")
@@ -131,8 +133,5 @@ class Estadisticas:
             self.cls(25)
             print("Opcion invalida!! Ingrese una opcion valida")
 
-
-    def cls(self, num): 
+    def cls(self, num):
         print ("\n" * num)
-
-

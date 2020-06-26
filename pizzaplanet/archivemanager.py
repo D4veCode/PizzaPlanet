@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 from pizzaplanet import database as db
+
+
 class Archive:
+
     conn = db.createConnection("pizzaplanet.db")
+
     def __init__(self, fileName):
         self.fileName = '{}.pz'.format(fileName)
 
@@ -26,11 +30,13 @@ class Archive:
                         else:
                             print('Pedido invalido!')
                             valido = False
+
+            print('Archivo leído con éxito! ')
         except IOError as e:
             print('Ruta no valida o no existe archivo con ese nombre')
         except Exception as err:
             print('Error.', str(err))
-                    
+
     def asignarData(self, data, ped):
         if data[0] not in ['personal', 'mediana', 'familiar']:
             ped.nombrecliente = data[0]
@@ -56,7 +62,8 @@ class Archive:
             for item in pizza:
                 pizzaController.addPizzaIngrediente(idBase, item, tam)
                 self.conn.commit()
-            
+
+
 class Pedido:
     def __init__(self, nombrecliente='', fecha='', pizzas=[]):
         self.nombrecliente = nombrecliente
