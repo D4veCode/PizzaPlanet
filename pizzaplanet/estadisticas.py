@@ -19,14 +19,18 @@ class Estadisticas:
 
             if(option == 1):
                 self.option_1()
+
             elif(option == 2):
                 self.option_2()
+
             elif(option == 3):
                 self.option_3()
+
             elif(option == 4):
                 self.option_4()
                 self.cls(1)
                 print("Creado resumen_ops.pz")
+
             elif(option == 0):
                 break
             self.cls(2)
