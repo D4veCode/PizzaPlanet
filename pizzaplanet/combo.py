@@ -6,6 +6,7 @@ class Combo:
     conn = database.createConnection("pizzaplanet.db")
 
     def main(self):
+        """Principal menu"""
         while True:
             print("Seleccione el día")
             print("1. Lunes")
@@ -48,6 +49,8 @@ class Combo:
                 break
 
     def mostrar_combo(self, dia):
+        """Returns the combo of the selected day, together with the calculation
+                        of the total price after applying the discount"""
         comboController = database.ComboController(self.conn)
         combo = comboController.getCombo(dia)
         self.cls(0)
@@ -62,6 +65,8 @@ class Combo:
             break
 
     def menu_crear_combo(self):
+        """First menu for creating the combo of the day, here the day on which
+                    the combo will be presented is selected and validated"""
         while True:
             print("\t\t---- Creando combo del día 1/4 ----")
             print("Seleccione el día para crear el descuento")
@@ -103,6 +108,7 @@ class Combo:
             break
 
     def menu_crear_combo2(self, dia):
+        """Second menu, here you select the size of the pizza you want to offer"""
         while True:
             print("\t\t---- Creando combo del día 2/4 ----")
             print("Seleccione el tamaño de la pizza a ofertar el día ", dia)
@@ -124,6 +130,8 @@ class Combo:
             break
 
     def menu_crear_combo3(self, dia, tamano, precio_base):
+        """Third menu, here you select the ingredient with which the pizza
+                     of the day will be accompanied"""
         while True:
             print("\t\t---- Creando combo del día 3/4 ----")
             print("Seleccione el ingrediente de la pizza ", tamano,
@@ -177,6 +185,8 @@ class Combo:
             break
 
     def menu_crear_combo4(self, dia, tamano, precio_base, fk_ingrediente):
+        """Fourth menu, here you must select the discount percentage of the
+                     combo of the day"""
         ingredienteController = database.IngredienteController(self.conn)
         ingrediente = ingredienteController.getIngredienteById(fk_ingrediente[0])
 
@@ -196,6 +206,7 @@ class Combo:
             break
 
     def validate_Entry(self):
+        """Returns the validated option from the principal menu"""
         entry = input("Por favor ingrese la opcion: ")
         try:
             entry = int(entry)
@@ -209,6 +220,7 @@ class Combo:
             print("Opcion invalida!! Ingrese una opcion valida")
 
     def validate_Entry2(self):
+        """Returns the validated option from the second menu"""
         entry = input("Por favor ingrese la opcion: ")
         try:
             entry = int(entry)
@@ -222,6 +234,7 @@ class Combo:
             print("Opcion invalida!! Ingrese una opcion valida")
 
     def validate_Entry3(self):
+        """Returns the validated option from the third menu"""
         entry = input("Por favor ingrese la opcion: ")
         try:
             entry = int(entry)
@@ -235,6 +248,7 @@ class Combo:
             print("Opcion invalida!! Ingrese una opcion valida")
 
     def validate_Entry4(self):
+        """Returns the validated option from the fourth menu"""
         entry = input("Por favor ingrese la opcion: ")
         try:
             entry = int(entry)
