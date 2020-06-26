@@ -105,6 +105,7 @@ class Estadisticas:
                 f.write("Venta Total: {} \n".format(ventaTotal[0][0]))
 
                 f.write("Ventas por pizza (sin incluir adicionales) \n")
+                f.write("Tamaño | Unidades | Monto UMs \n")
                 for row in pizzas:
                     if (row[0] == "personal"):
                         price = 10
@@ -116,6 +117,7 @@ class Estadisticas:
                     f.write(row[0] + "  |  " + str(row[1]) + "  |  " +
                         str(total) + "\n")
                 f.write("Ventas por Ingrediente: \n")
+                f.write("Ingredientes | Unidades | Monto UMs \n")
                 for row in ingredientes:
                     f.write(row[0] + "  |  " + str(row[1]) + "  |  " +
                     str(row[2]) + "\n")
