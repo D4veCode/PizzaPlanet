@@ -139,12 +139,6 @@ class Combo:
             opcion = self.validate_Entry3()
             ingredienteController = database.IngredienteController(self.conn)
             self.conn.commit()
-<<<<<<< HEAD
-=======
-            a = ingredienteController.createIngrediente('champiñones',
-                                                        1.75, 'personal')
-            print("ID INGREDIENTE: ", a)
->>>>>>> master
 
             if (opcion == 1):
                 self.menu_crear_combo4(dia, tamano, precio_base,
@@ -152,7 +146,7 @@ class Combo:
 
             elif (opcion == 2):
                 self.menu_crear_combo4(dia, tamano, precio_base,
-                ingredienteController.getIngredienteIdByTamano('champiñones',
+                ingredienteController.getIngredienteIdByTamano('champinones',
                                                                 tamano))
 
             elif (opcion == 3):
@@ -185,10 +179,7 @@ class Combo:
     def menu_crear_combo4(self, dia, tamano, precio_base, fk_ingrediente):
         ingredienteController = database.IngredienteController(self.conn)
         ingrediente = ingredienteController.getIngredienteById(fk_ingrediente[0])
-<<<<<<< HEAD
-=======
-        print("ID DEL INGREDIENTE2: ", fk_ingrediente[0][0])
->>>>>>> master
+
         while True:
             print("\t\t---- Creando combo del día 4/4 ----")
             print("Seleccione el descuento (número entero) de la pizza ",
