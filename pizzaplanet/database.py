@@ -4,6 +4,7 @@ from sqlite3 import Error
 
 
 def createConnection(database):
+    """Return the connection to the database"""
     conn = None
     try:
         conn = sqlite3.connect(database)
@@ -15,6 +16,7 @@ def createConnection(database):
 
 
 def createTables(conn):
+    """Create of the database tables"""
     sqls = list()
 
     sql1 = """CREATE TABLE IF NOT EXISTS Cliente (
@@ -77,6 +79,7 @@ def createTables(conn):
 
 
 def insertIngredients(conn):
+    """Default inserts of ingredients"""
     sql = """SELECT name from Ingrediente;"""
 
     cursor = conn.cursor()
@@ -123,6 +126,12 @@ class ClienteController:
         self.__cursor.close()
 
     def createCliente(self, name, lastName):
+        """Insert a client in the database.
+
+        Keyword arguments:
+        name -- client's name
+        lastName -- client's last name
+        """
         sql = """INSERT INTO Cliente (name, last_Name)
              VALUES(?, ?);"""
         lowName = name.lower()
@@ -140,6 +149,13 @@ class IngredienteController:
         self.__cursor.close()
 
     def createIngrediente(self, name, price, tamano):
+        """Insert a ingredient in the database.
+
+        Keyword arguments:
+        name -- ingredient's name
+        price -- ingredient's price
+        tamano -- ingredient's size
+        """
         sql = """INSERT INTO Ingrediente (name, price, tamano)
              VALUES(?, ?, ?);"""
         lowName = name.lower()
@@ -148,6 +164,7 @@ class IngredienteController:
         return self.__cursor.lastrowid
 
     def getVentaIngredientes(self):
+        """Return sales of ingredients"""
         sql = """SELECT i.name, COUNT(i.name), SUM(i.price)
                   FROM Ingrediente as i, Pizza as p
                   WHERE p.fk_Ingrediente = i.id_Ingrediente GROUP BY i.name;"""
@@ -156,6 +173,11 @@ class IngredienteController:
         return rows
 
     def getVentaIngredientesByDay(self, date):
+        """Return sales of ingredients given a day
+
+        Keyword arguments:
+        date -- date ingredients are consulted
+        """
         sql = """SELECT i.name, COUNT(i.name), SUM(i.price)
                   FROM Ingrediente as i, Pizza as p, Base as b, Pedido as a
                   WHERE p.fk_Ingrediente = i.id_Ingrediente
@@ -167,6 +189,7 @@ class IngredienteController:
         return rows
 
     def getPopularIngredientes(self):
+        """Return sales of ingredients ordered descending"""
         sql = """SELECT i.name, COUNT(i.name), SUM(i.price)
                   FROM Ingrediente as i, Pizza as p
                   WHERE p.fk_Ingrediente = i.id_Ingrediente
