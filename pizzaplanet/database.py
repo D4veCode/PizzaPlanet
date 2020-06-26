@@ -148,16 +148,18 @@ class IngredienteController:
         return self.__cursor.lastrowid
 
     def getVentaIngredientes(self):
-        sql = """SELECT i.name, COUNT(i.name), SUM(i.price) 
-        FROM Ingrediente as i, Pizza as p WHERE p.fk_Ingrediente = i.id_Ingrediente GROUP BY i.name;"""
+        sql = """SELECT i.name, COUNT(i.name), SUM(i.price)
+                  FROM Ingrediente as i, Pizza as p
+                  WHERE p.fk_Ingrediente = i.id_Ingrediente GROUP BY i.name;"""
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
         return rows
 
     def getVentaIngredientesByDay(self, date):
-        sql = """SELECT i.name, COUNT(i.name), SUM(i.price) 
-        FROM Ingrediente as i, Pizza as p, Base as b, Pedido as a
-        WHERE p.fk_Ingrediente = i.id_Ingrediente and p.fk_Base = b.id_Base and b.fk_Pedido = a.id_Pedido 
+        sql = """SELECT i.name, COUNT(i.name), SUM(i.price)
+                  FROM Ingrediente as i, Pizza as p, Base as b, Pedido as a
+                  WHERE p.fk_Ingrediente = i.id_Ingrediente
+                  and p.fk_Base = b.id_Base and b.fk_Pedido = a.id_Pedido
         and a.pedido_Date = ?
         GROUP BY i.name;"""
         self.__cursor.execute(sql, (date,))
@@ -165,23 +167,27 @@ class IngredienteController:
         return rows
 
     def getPopularIngredientes(self):
-        sql = """SELECT i.name, COUNT(i.name), SUM(i.price) 
-        FROM Ingrediente as i, Pizza as p WHERE p.fk_Ingrediente = i.id_Ingrediente GROUP BY i.name ORDER BY COUNT(i.name) DESC;"""
+        sql = """SELECT i.name, COUNT(i.name), SUM(i.price)
+                  FROM Ingrediente as i, Pizza as p
+                  WHERE p.fk_Ingrediente = i.id_Ingrediente
+                  GROUP BY i.name ORDER BY COUNT(i.name) DESC;"""
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
         return rows
-    
+
     def getIngredienteIdByTamano(self, name, tamano):
-        sql = """SELECT id_Ingrediente from Ingrediente where name = ? and tamano = ?;"""
-        self.__cursor.execute(sql, (name,tamano))
+        sql = """SELECT id_Ingrediente FROM Ingrediente
+                  WHERE name = ? AND tamano = ?;"""
+        self.__cursor.execute(sql, (name, tamano))
         row = self.__cursor.fetchall()
         return row
 
     def getIngredienteById(self, id_ingrediente):
-        sql = """SELECT name from Ingrediente where id_Ingrediente = ?;"""
+        sql = """SELECT name FROM Ingrediente where id_Ingrediente = ?;"""
         self.__cursor.execute(sql, (id_ingrediente))
         row = self.__cursor.fetchall()
         return row
+
 
 class PedidoController:
 
@@ -196,7 +202,7 @@ class PedidoController:
              VALUES(?, ?, ?);"""
         self.__cursor.execute(sql, (fk_Cliente, pedido_Date, 0))
         return self.__cursor.lastrowid
-    
+
     def getVentaTotal(self):
         sql = """SELECT SUM(total_price) FROM Pedido;"""
         self.__cursor.execute(sql)
@@ -210,20 +216,23 @@ class PedidoController:
         return row
 
     def getDays(self):
-        sql = """SELECT DISTINCT pedido_Date FROM Pedido ORDER BY pedido_Date ASC;"""
+        sql = """SELECT DISTINCT pedido_Date
+                  FROM Pedido ORDER BY pedido_Date ASC;"""
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
         return rows
 
     def getAllPedidos(self):
-        sql = """SELECT p.pedido_Date, c.name, c.last_name, COUNT(b.fk_Pedido), p.total_Price
-        FROM Pedido as p, Cliente as c, Base as b
-        WHERE c.id_Cliente = p.fk_Cliente and p.id_Pedido = b.fk_Pedido
-        GROUP BY b.fk_Pedido
-        ORDER BY pedido_Date ASC, c.name ASC;"""
+        sql = """SELECT p.pedido_Date, c.name, c.last_name,
+                  COUNT(b.fk_Pedido), p.total_Price
+                  FROM Pedido as p, Cliente as c, Base as b
+                  WHERE c.id_Cliente = p.fk_Cliente
+                  AND p.id_Pedido = b.fk_Pedido
+                  GROUP BY b.fk_Pedido
+                  ORDER BY pedido_Date ASC, c.name ASC;"""
         self.__cursor.execute(sql)
         rows = self.__cursor.fetchall()
-        return rows   
+        return rows
 
 
 class PizzaController:
@@ -308,10 +317,14 @@ class PizzaController:
         return rows
 
     def getVentaPizzasTamañoByDay(self, date):
-        sql = """SELECT b.tamano, COUNT(b.tamano) FROM Base as b, Pedido as p WHERE b.fk_Pedido = p.id_Pedido and p.pedido_Date = ? GROUP BY tamano;"""
+        sql = """SELECT b.tamano, COUNT(b.tamano)
+                  FROM Base as b, Pedido as p
+                  WHERE b.fk_Pedido = p.id_Pedido
+                  and p.pedido_Date = ? GROUP BY tamano;"""
         self.__cursor.execute(sql, (date,))
         rows = self.__cursor.fetchall()
         return rows
+
 
 class ComboController:
     def __init__(self, connection):
@@ -319,24 +332,30 @@ class ComboController:
 
     def __del__(self):
         self.__cursor.close()
-    
+
     def createCombo(self, dia, fk_ingrediente, tamano, precio_base, descuento):
-        print("Dia: ",dia)
-        print("FK: ",fk_ingrediente)
+        print("Dia: ", dia)
+        print("FK: ", fk_ingrediente)
         print("Tamano: ", tamano)
-        print("Precio base: ",precio_base)
+        print("Precio base: ", precio_base)
         print("descuento: ", descuento)
-        sql = """INSERT INTO Combo (dia, fk_Ingrediente, tamano, precio_base, descuento)
-             VALUES(?, ?, ?, ?, ?);"""
-        self.__cursor.execute(sql, (dia, fk_ingrediente, tamano, precio_base, descuento))
-        
+        sql = """INSERT INTO Combo (dia, fk_Ingrediente,
+                                    tamano, precio_base, descuento)
+                   VALUES(?, ?, ?, ?, ?);"""
+        self.__cursor.execute(sql, (dia, fk_ingrediente, tamano,
+                                    precio_base, descuento))
+
     def getCombo(self, dia):
         lowDia = dia.lower()
-        sql = """SELECT DISTINCT c.dia, c.tamano, c.precio_base, c.descuento, i.name, i.price FROM Combo as c, Base as b, Ingrediente as i
-             WHERE c.dia = ? and c.fk_Ingrediente = i.id_Ingrediente ORDER BY c.id_Combo desc;"""
+        sql = """SELECT DISTINCT c.dia, c.tamano, c.precio_base,
+                                  c.descuento, i.name, i.price
+                  FROM Combo as c, Base as b, Ingrediente as i
+                  WHERE c.dia = ? and c.fk_Ingrediente = i.id_Ingrediente
+                  ORDER BY c.id_Combo desc;"""
         self.__cursor.execute(sql, (lowDia,))
         rows = self.__cursor.fetchall()
         return rows
+
 
 def main():
     database = "pizzaplanet.db"
