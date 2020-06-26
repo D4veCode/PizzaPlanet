@@ -452,7 +452,7 @@ class ComboController:
         lowDia = dia.lower()
         sql = """SELECT DISTINCT c.dia, c.tamano, c.precio_base,
                                   c.descuento, i.name, i.price
-                  FROM Combo as c, Base as b, Ingrediente as i
+                  FROM Combo as c, Ingrediente as i
                   WHERE c.dia = ? and c.fk_Ingrediente = i.id_Ingrediente
                   ORDER BY c.id_Combo desc;"""
         self.__cursor.execute(sql, (lowDia,))
