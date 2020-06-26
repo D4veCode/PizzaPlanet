@@ -39,6 +39,7 @@ class Main:
         print("Gracias por su atencion hasta luego")
 
     def Validate_Entry(self):
+        """Validate files inputs """
         entry = input("Por favor ingrese la opcion: ")
         try:
             entry = int(entry)

@@ -45,6 +45,7 @@ class Archive:
             ped.pizzas.append(data)
 
     def guardarPedido(self, ped):
+        """Store pedidos in the database"""
         client = db.ClienteController(self.conn)
         name = ped.nombrecliente.split(' ')
         idCliente = client.createCliente(name[0], name[1])
